@@ -283,10 +283,12 @@ USAGE_STRING = """
 # Main harness code
 
 def runClassifier(args, options):
+  print(args)
+  print(options)
 
-  featureFunction = args['featureFunction']
-  classifier = args['classifier']
-  printImage = args['printImage']
+  featureFunction = args['featureFunction'] #function basicFeatureExtractorDigit
+  classifier = args['classifier'] #naiveBayes.NaiveBayesClassifier object
+  printImage = args['printImage'] #bound method ImagePrinter.printImage of <__main__.ImagePrinter object
       
   # Load data  
   numTraining = options.training

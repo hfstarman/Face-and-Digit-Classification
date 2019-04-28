@@ -22,6 +22,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.type = "naivebayes"
     self.k = 1 # this is the smoothing parameter, ** use it in your train method **
     self.automaticTuning = False # Look at this flag to decide whether to choose k automatically ** use this in your train method **
+    print("Legal Labels:", self.legalLabels)
     
   def setSmoothing(self, k):
     """
@@ -61,6 +62,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
+    print(kgrid)
     util.raiseNotDefined()
         
   def classify(self, testData):
