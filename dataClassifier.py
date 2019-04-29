@@ -175,7 +175,7 @@ def readCommand( argv ):
   parser.add_option('-w', '--weights', help=default('Whether to print weights'), default=False, action="store_true")
   parser.add_option('-k', '--smoothing', help=default("Smoothing parameter (ignored when using --autotune)"), type="float", default=2.0)
   parser.add_option('-a', '--autotune', help=default("Whether to automatically tune hyperparameters"), default=False, action="store_true")
-  parser.add_option('-i', '--iterations', help=default("Maximum iterations to run training"), default=3, type="int")
+  parser.add_option('-i', '--iterations', help=default("Maximum iterations to run training"), default=2, type="int")
   parser.add_option('-s', '--test', help=default("Amount of test data to use"), default=TEST_SET_SIZE, type="int")
 
   options, otherjunk = parser.parse_args(argv)
@@ -283,7 +283,6 @@ USAGE_STRING = """
 # Main harness code
 
 def runClassifier(args, options):
-  print(args)
   print(options)
 
   featureFunction = args['featureFunction'] #function basicFeatureExtractorDigit
@@ -319,10 +318,10 @@ def runClassifier(args, options):
   # Conduct training and testing
   print("Training...")
   classifier.train(trainingData, trainingLabels, validationData, validationLabels)
-  print("Validating...")
-  guesses = classifier.classify(validationData)
-  correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
-  print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
+  # print("Validating...")
+  # guesses = classifier.classify(validationData)
+  # correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
+  # print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
   print("Testing...")
   guesses = classifier.classify(testData)
   correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)

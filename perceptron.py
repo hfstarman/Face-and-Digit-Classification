@@ -48,8 +48,17 @@ class PerceptronClassifier:
     for iteration in range(self.max_iterations):
       print("Starting iteration %d..." % iteration)
       for i in range(len(trainingData)):
-          "*** YOUR CODE HERE ***"
-          util.raiseNotDefined()
+        "*** YOUR CODE HERE ***"
+        vectors = util.Counter()
+        for label in self.legalLabels:
+          vectors[label] = self.weights[label] * trainingData[i]
+
+        #trainingLabels[i] is the true label
+        best_guess_label = vectors.argMax()
+        if self.weights[trainingLabels[i]] != best_guess_label:
+          self.weights[trainingLabels[i]] += trainingData[i]
+          self.weights[best_guess_label] -= trainingData[i]
+
     
   def classify(self, data ):
     """
@@ -62,6 +71,7 @@ class PerceptronClassifier:
     for datum in data:
       vectors = util.Counter()
       for l in self.legalLabels:
+        #self.weights is what changes here, don't need to call this fun
         vectors[l] = self.weights[l] * datum
       guesses.append(vectors.argMax())
     return guesses
