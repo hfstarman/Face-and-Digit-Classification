@@ -9,7 +9,7 @@ $start_faces = Get-Date
 foreach ($amount in $faceArray) 
 {
     "Running Faces: " + $amount
-    python dataClassifier.py -c naiveBayes -d faces -t $amount >> naiveBayesResults.txt
+    python dataClassifier.py -c naiveBayes -d faces -t $amount -s 150 >> naiveBayesResults.txt
 }
 
 $end_faces = Get-Date
@@ -18,7 +18,7 @@ $start_digits = Get-Date
 foreach ($amount in $digitArray) 
 {
     "Running Digits: " + $amount
-    python dataClassifier.py -c naiveBayes -d digits -t $amount >> naiveBayesResults.txt
+    python dataClassifier.py -c naiveBayes -d digits -t $amount -s 1000 >> naiveBayesResults.txt
 }
 
 $end_digits = Get-Date
