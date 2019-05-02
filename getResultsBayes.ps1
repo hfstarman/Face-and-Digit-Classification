@@ -18,7 +18,7 @@ $start_digits = Get-Date
 foreach ($amount in $digitArray) 
 {
     "Running Digits: " + $amount
-    python dataClassifier.py -c naiveBayes -d digits -t $amount -s 1000 >> naiveBayesResults.txt
+    python dataClassifier.py -c naiveBayes -d digits -t $amount -s 1000 -k .001 >> naiveBayesResults.txt
 }
 
 $end_digits = Get-Date
