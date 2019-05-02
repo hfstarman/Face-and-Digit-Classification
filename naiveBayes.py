@@ -46,6 +46,12 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         kgrid = [self.k]
         
     self.trainAndTune(trainingData, trainingLabels, validationData, validationLabels, kgrid)
+
+  def getFeatureCountTrue(self, feature, label):
+    return self.featureCounts[label][feature]
+
+  def getFeatureCountFalse(self, feature, label):
+    return self.count_labels[label] - self.featureCounts[label][feature]
       
   def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, kgrid):
     """
@@ -62,8 +68,27 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
-    print(kgrid)
-    util.raiseNotDefined()
+    #added vars:
+    #   self.count_labels
+    #   self.featureCounts
+    #   self.dataCount
+
+    #Use this var to get P(label)
+    self.count_labels = [0 for x in self.legalLabels]
+
+    self.featureCounts = {}
+    for label in self.legalLabels:
+      self.featureCounts[label] = util.Counter() # this is the data-structure you should use
+
+    counter = 0
+    for i in range(len(trainingData)):
+      counter += 1
+      self.count_labels[trainingLabels[i]] += 1
+      self.featureCounts[i] = util.Counter()
+      self.featureCounts[trainingLabels[i]] += trainingData[i]
+
+    self.dataCount = counter
+    
         
   def classify(self, testData):
     """
@@ -90,8 +115,25 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
     logJoint = util.Counter()
     
+    #getFeatureCountTrue(feature, label)
+    #getFeatureCountFalse(feature, label)
+
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    for label in self.legalLabels:
+      priorProb_Labels = math.log(self.count_labels[label] / self.dataCount)
+
+      featureProb_givenLabel = 0
+      for feature in datum:
+        trueCount = self.getFeatureCountTrue(feature, label) + self.k
+        falseCount = self.getFeatureCountFalse(feature, label) + self.k
+        denominator = trueCount + falseCount
+
+        if(datum[feature]):
+          featureProb_givenLabel += math.log(trueCount / denominator)
+        else:
+          featureProb_givenLabel += math.log(falseCount / denominator)
+
+      logJoint[label] = priorProb_Labels + featureProb_givenLabel
     
     return logJoint
   

@@ -116,11 +116,11 @@ def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
       prediction = guesses[i]
       truth = testLabels[i]
       if (prediction != truth):
-          print("===================================")
-          print("Mistake on example %d" % i) 
-          print("Predicted %d; truth is %d" % (prediction, truth))
-          print("Image: ")
-          print(rawTestData[i])
+          # print("===================================")
+          # print("Mistake on example %d" % i) 
+          # print("Predicted %d; truth is %d" % (prediction, truth))
+          # print("Image: ")
+          # print(rawTestData[i])
           break
 
 
@@ -173,7 +173,7 @@ def readCommand( argv ):
   parser.add_option('-1', '--label1', help=default("First label in an odds ratio comparison"), default=0, type="int")
   parser.add_option('-2', '--label2', help=default("Second label in an odds ratio comparison"), default=1, type="int")
   parser.add_option('-w', '--weights', help=default('Whether to print weights'), default=False, action="store_true")
-  parser.add_option('-k', '--smoothing', help=default("Smoothing parameter (ignored when using --autotune)"), type="float", default=2.0)
+  parser.add_option('-k', '--smoothing', help=default("Smoothing parameter (ignored when using --autotune)"), type="float", default=1.0)
   parser.add_option('-a', '--autotune', help=default("Whether to automatically tune hyperparameters"), default=False, action="store_true")
   parser.add_option('-i', '--iterations', help=default("Maximum iterations to run training"), default=2, type="int")
   parser.add_option('-s', '--test', help=default("Amount of test data to use"), default=TEST_SET_SIZE, type="int")
@@ -283,7 +283,7 @@ USAGE_STRING = """
 # Main harness code
 
 def runClassifier(args, options):
-  print(options)
+  #print(options)
 
   featureFunction = args['featureFunction'] #function basicFeatureExtractorDigit
   classifier = args['classifier'] #naiveBayes.NaiveBayesClassifier object
@@ -326,6 +326,7 @@ def runClassifier(args, options):
   guesses = classifier.classify(testData)
   correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
   print(str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+  print("")
   analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
   
   # do odds ratio computation if specified at command line

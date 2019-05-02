@@ -55,7 +55,7 @@ class PerceptronClassifier:
 
         #trainingLabels[i] is the true label
         best_guess_label = vectors.argMax()
-        if self.weights[trainingLabels[i]] != best_guess_label:
+        if trainingLabels[i] != best_guess_label:
           self.weights[trainingLabels[i]] += trainingData[i]
           self.weights[best_guess_label] -= trainingData[i]
 
