@@ -12,10 +12,12 @@
 import mostFrequent
 import naiveBayes
 import perceptron
+import kNearestNeighbors
 import mira
 import samples
 import sys
 import util
+import time
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -165,7 +167,7 @@ def readCommand( argv ):
   from optparse import OptionParser  
   parser = OptionParser(USAGE_STRING)
   
-  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest'], default='mostFrequent')
+  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'kNN', 'kNearestNeighbors', 'mira', 'minicontest'], default='mostFrequent')
   parser.add_option('-d', '--data', help=default('Dataset to use'), choices=['digits', 'faces'], default='digits')
   parser.add_option('-t', '--training', help=default('The size of the training set'), default=100, type="int")
   parser.add_option('-f', '--features', help=default('Whether to use enhanced features'), default=False, action="store_true")
@@ -234,6 +236,8 @@ def readCommand( argv ):
 
   if(options.classifier == "mostFrequent"):
     classifier = mostFrequent.MostFrequentClassifier(legalLabels)
+  elif(options.classifier == "kNN" or options.classifier == "kNearestNeighbors"):
+    classifier = kNearestNeighbors.kNearestNeighborsClassifier(legalLabels)
   elif(options.classifier == "naiveBayes" or options.classifier == "nb"):
     classifier = naiveBayes.NaiveBayesClassifier(legalLabels)
     classifier.setSmoothing(options.smoothing)
@@ -285,9 +289,9 @@ USAGE_STRING = """
 def runClassifier(args, options):
   #print(options)
 
-  featureFunction = args['featureFunction'] #function basicFeatureExtractorDigit
-  classifier = args['classifier'] #naiveBayes.NaiveBayesClassifier object
-  printImage = args['printImage'] #bound method ImagePrinter.printImage of <__main__.ImagePrinter object
+  featureFunction = args['featureFunction']
+  classifier = args['classifier']
+  printImage = args['printImage']
       
   # Load data  
   numTraining = options.training
@@ -296,15 +300,11 @@ def runClassifier(args, options):
   if(options.data=="faces"):
     rawTrainingData, chosenList = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT,True)
     trainingLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", chosenList)
-    # rawValidationData, valList = samples.loadDataFile("facedata/facedatatrain", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
-    # validationLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", chosenList)
     rawTestData, chosenList = samples.loadDataFile("facedata/facedatatest", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("facedata/facedatatestlabels", chosenList)
   else:
     rawTrainingData, chosenList = samples.loadDataFile("digitdata/trainingimages", numTraining,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT,True)
     trainingLabels = samples.loadLabelsFile("digitdata/traininglabels", chosenList)
-    # rawValidationData, valList = samples.loadDataFile("digitdata/validationimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
-    # validationLabels = samples.loadLabelsFile("digitdata/validationlabels", chosenList)
     rawTestData, chosenList = samples.loadDataFile("digitdata/testimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("digitdata/testlabels", chosenList)
     
@@ -318,11 +318,12 @@ def runClassifier(args, options):
   # Conduct training and testing
   print("Training...")
   validationData, validationLabels = [0], [0]
+  start_time = time.time()
   classifier.train(trainingData, trainingLabels, validationData, validationLabels)
-  # print("Validating...")
-  # guesses = classifier.classify(validationData)
-  # correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
-  # print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
+  train_time = time.time() - start_time
+  print(train_time, end='')
+  print (" (training time)")
+  #exit()
   print("Testing...")
   guesses = classifier.classify(testData)
   correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
