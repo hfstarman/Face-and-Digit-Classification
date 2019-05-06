@@ -1,2 +1,5 @@
-test.*
 __pycache__
+test.*
+*.txt
+getResults*
+RegressionGraphs
