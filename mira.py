@@ -7,6 +7,9 @@
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
 # Mira implementation
+
+#THIS FILE IS NOT BEING USED
+
 import util
 PRINT = True
 
